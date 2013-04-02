@@ -62,6 +62,11 @@ Then you'll get re-emmited tag/record below:
 
 The `out_keys` is used to point keys whose value contains CSV-formatted string.
 
+### firstpoint
+
+The `firstpoint` is used to a first point number of piriod-separated-tags.
+Default value is 1.
+
 ### remove_tag_prefix, remove_tag_suffix, add_tag_prefix, add_tag_suffix
 
 These params are included from `Fluent::HandleTagNameMixin`. See that code for details.
@@ -98,4 +103,4 @@ Copyright (c) 2013- Fukui Masayuki (@msfukui)
 
 ### License
 
-MIT License
+Apache License, Version 2.0

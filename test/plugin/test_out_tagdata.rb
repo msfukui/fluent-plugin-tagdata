@@ -7,20 +7,22 @@ class TagdataOutputTest < Test::Unit::TestCase
 
 	DEFAULT_CONFIG = %[
 		out_keys server,protocol,domain
+		firstpoint 1
 		add_tag_prefix    filtered.
 		remove_tag_prefix example.
 	]
 
-	def create_driver(conf = DEFAULT_CONFIG, tag='example.straycat.http.www.example.com')
+	def create_driver(conf = DEFAULT_CONFIG, tag = 'example.straycat.http.www.example.com')
 		Fluent::Test::OutputTestDriver.new(Fluent::TagdataOutput, tag).configure(conf)
 	end
 
 	def test_configure
 		# when 'out_keys' is set
 		d = create_driver
-		assert_equal 'server,protocol,domain', d.instance.out_keys
-		assert_equal 'filterd.',               d.instance.add_tag_prefix
-		assert_equal /^example\./,             d.instance.remove_tag_prefix
+		assert_equal ["server","protocol","domain"], d.instance.out_keys
+		assert_equal 1,                              d.instance.firstpoint
+		assert_equal 'filtered.',                    d.instance.add_tag_prefix
+		assert_equal /^example\./,                   d.instance.remove_tag_prefix
 		
 		# when 'out_keys' not set
 		assert_raise(Fluent::ConfigError) do
@@ -29,6 +31,26 @@ class TagdataOutputTest < Test::Unit::TestCase
 				remove_tag_prefix example.
       ])
     end
+
+		# when 'firstpoint' not positive number
+		assert_raise(Fluent::ConfigError) do
+			create_driver(%[
+				out_keys server,protocol,domain
+				firstpoint -1
+				add_tag_prefix    filtered.
+				remove_tag_prefix example.
+      ])
+    end
+	end
+
+	def test_filter_record
+		d = create_driver(DEFAULT_CONFIG)
+		tag = 'example.test'
+		record = { 'dummy' => 'dummy' }
+
+		d.instance.filter_record(tag,Time.now,record)
+
+		assert_equal 'filtered.test', tag
 	end
 
 	def test_emit
@@ -51,7 +73,8 @@ class TagdataOutputTest < Test::Unit::TestCase
 
 		assert_equal 1, emits.count
 
-		assert_equal 'filtered.straycat.http.www.example.com', emits[0][0]
+		assert_equal 'example.straycat.http.www.example.com', emits[0][0]
+#		assert_equal 'filtered.straycat.http.www.example.com', emits[0][0]
 		assert_equal time, emits[0][1]
 
 		assert_equal [
