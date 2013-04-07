@@ -73,8 +73,7 @@ class TagdataOutputTest < Test::Unit::TestCase
 
 		assert_equal 1, emits.count
 
-		assert_equal 'example.straycat.http.www.example.com', emits[0][0]
-#		assert_equal 'filtered.straycat.http.www.example.com', emits[0][0]
+		assert_equal 'filtered.straycat.http.www.example.com', emits[0][0]
 		assert_equal time, emits[0][1]
 
 		assert_equal [

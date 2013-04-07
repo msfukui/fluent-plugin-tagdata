@@ -25,7 +25,7 @@ module Fluent
 				tagd = tag.dup
 				get_mapped_tag_to_out_keys(tagd, time, record)
 				filter_record(tagd, time, record)
-				Fluent::Engine.emit(tag, time, record)
+				Fluent::Engine.emit(tagd, time, record)
 			end
 			chain.next
 		end
