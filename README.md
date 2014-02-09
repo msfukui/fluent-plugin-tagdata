@@ -1,4 +1,4 @@
-# fluent-plugin-tagdata
+# fluent-plugin-tagdata, a plugin for [Fluentd](http://fluentd.org)
 
 Fluentd plugin to put the tag records in the data.
 
